@@ -1,0 +1,28 @@
+version: '3'
+services:
+    postgres:
+        image: postgres:alpine
+        ports:
+            - 5432:5432
+        environment:
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=changeit
+        volumes:
+            - $HOME/postgresql/data:/var/lib/postgresql
+
+
+    wildfly:
+        image: trunov/wildfly-postgresql
+        ports:
+            - 8080:8080
+            - 4848:4848
+            - 9990:9990
+        volumes:
+            - $HOME/application/war/:/opt/wildfly-15.0.0.Final/standalone/deployments
+        environment:
+            - DB_HOST=postgres
+            - DB_NAME=postgres
+            - DB_USER=postgres
+            - DB_PASS=changeit
+        depends_on:
+            - postgres
